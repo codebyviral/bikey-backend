@@ -1,12 +1,22 @@
 import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import { connectToDataBase } from "./config/db.js";
 
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 7000;
 
-app.get("/",(req,res)=>{
-    res.send(`Bikey. Wheels for your moments!`);
+app.use(express.json());
+dotenv.config();
+
+app.get("/", (req, res) => {
+    res.status(200).send(`Bikey. Wheels for your moments!`);
 })
 
-app.listen(port, () => {
-    console.log(`Bikey app listening on port ${port}`)
-  })
+connectToDataBase().then(() => {
+    app.listen(port, () => {
+        console.log(`Bikey app running on port ${port}`)
+    })
+})
+
+export default app;

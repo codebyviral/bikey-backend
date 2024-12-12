@@ -1,22 +1,25 @@
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
-import { connectToDataBase } from "./config/db.js";
+import connectDB from './db/index.js';
 
 const app = express();
-const port = process.env.PORT || 7000;
 
 app.use(express.json());
-dotenv.config();
+dotenv.config({ path: "./env" });
 
-app.get("/", (req, res) => {
-    res.status(200).send(`Bikey. Wheels for your moments!`);
-})
+const port = process.env.PORT || 4000;
 
-connectToDataBase().then(() => {
-    app.listen(port, () => {
-        console.log(`Bikey app running on port ${port}`)
+connectDB()
+    .then(() => {
+        app.listen(port, () => {
+            console.log(`Server is running at port : ${port}`);
+        })
+        app.on("error", (error) => {
+            console.log(`ERRR : ${error}`);
+            throw error
+        })
     })
-})
-
+    .catch((err) => {
+        console.error(`MongoDB connection failed !!! ${err}`)
+    })
 export default app;

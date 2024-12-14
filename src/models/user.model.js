@@ -61,6 +61,7 @@ const userSchema = new mongoose.Schema({
     }],
 }, { timestamps: true })
 
+
 // IMP___ NOTE don't use callback instead use func. keyword
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
